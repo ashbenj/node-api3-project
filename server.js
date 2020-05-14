@@ -9,11 +9,9 @@ const server = express();
 
 server.use(express.json());
 server.use(helmet());
-server.use(morgan('dev'));
-server.use((req, res, next) => {
-	console.log(req.method);
-	next();
-});
+// server.use(morgan('dev'));
+server.use(logger);
+server.use(addName);
 
 server.use('/users', userRouter);
 server.use('/posts', postRouter);
@@ -28,6 +26,18 @@ server.get('/', (req, res) => {
 
 //custom middleware
 
-function logger(req, res, next) {}
+function logger(req, res, next) {
+	console.log(req.method);
+	next();
+}
+
+function addName(req, res, next) {
+	if (!req.name) {
+		req.name = 'Asha';
+	}
+	next();
+}
+
+function validateUserId(req, res, next) {}
 
 module.exports = server;
